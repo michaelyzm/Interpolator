@@ -62,6 +62,14 @@ public class CubicBezierInterpolator implements Interpolator {
 
     @Override
     public float getInterpolation(float input) {
+        if(input == 0)
+        {
+            return 0;
+        }
+        else if(input == 1)
+        {
+            return 1;
+        }
         float t = estimateT(input);
         float yResult = cubicBezier(t, y0, y1);
         return yResult;

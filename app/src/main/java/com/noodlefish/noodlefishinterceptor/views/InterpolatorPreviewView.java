@@ -79,7 +79,6 @@ public class InterpolatorPreviewView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         paint.setAntiAlias(true);
-        long startTime = System.currentTimeMillis();
         int width = canvas.getWidth();
         int height = canvas.getHeight();
 
@@ -93,7 +92,7 @@ public class InterpolatorPreviewView extends View {
         canvas.drawLine(padding, height - padding - size, padding, height - padding, paint);
         float x = padding, y = height - padding;
         float prex = x, prey = y;
-        for(int i = 0; i < size; ++i)
+        for(int i = 0; i <= size; ++i)
         {
             float xt = i + x;
             float yt = interpolator.getInterpolation((float)i/size) * size;
@@ -102,10 +101,6 @@ public class InterpolatorPreviewView extends View {
             prex = xt;
             prey = yt;
         }
-        canvas.drawLine(prex, prey, width - padding, height - padding - size, paint);
-        long timeUsed = System.currentTimeMillis() - startTime;
-        Log.d("Total time used", ""+timeUsed);
-        Log.d("Average time used", "" + timeUsed/size);
     }
 
     public void setOnInterpolatorChangeListener(OnInterpolatorChangeListener onInterpolatorChangeListener)
