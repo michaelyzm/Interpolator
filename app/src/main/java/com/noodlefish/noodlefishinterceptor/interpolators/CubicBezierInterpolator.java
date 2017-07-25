@@ -1,4 +1,4 @@
-package com.noodlefish.noodlefishinterceptor;
+package com.noodlefish.noodlefishinterceptor.interpolators;
 
 import android.view.animation.Interpolator;
 
@@ -23,6 +23,19 @@ public class CubicBezierInterpolator implements Interpolator {
         this.x1 = x1;
         this.y1 = y1;
     }
+
+    public void setX0Y0(float x0, float y0)
+    {
+        this.x0 = x0;
+        this.y0 = y0;
+    }
+
+    public void setX1Y1(float x1, float y1)
+    {
+        this.x1 = x1;
+        this.y1 = y1;
+    }
+
 
     float cubicBezier(float t, float c0, float c1)
     {
@@ -52,5 +65,10 @@ public class CubicBezierInterpolator implements Interpolator {
         float t = estimateT(input);
         float yResult = cubicBezier(t, y0, y1);
         return yResult;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ")";
     }
 }
