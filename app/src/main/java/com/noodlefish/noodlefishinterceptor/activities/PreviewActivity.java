@@ -16,7 +16,7 @@ import com.noodlefish.noodlefishinterceptor.views.InterpolatorPreviewView;
 public class PreviewActivity extends Activity {
     InterpolatorPreviewView previewView;
     TextView functionView;
-    CubicBezierInterpolator cubicBezierInterpolator = new CubicBezierInterpolator(0.25f, 0.1f, 0.85f, 1.0f);
+    CubicBezierInterpolator cubicBezierInterpolator = new CubicBezierInterpolator();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -87,7 +87,8 @@ public class InterpolatorPreviewView extends View {
 
         canvas.drawLine(0, 0, width, 0, paint);
         canvas.drawLine(0, 0, 0, height, paint);
-
+        canvas.drawLine(width, 0, width, height, paint);
+        canvas.drawLine(0, height, width, height,paint);
         canvas.drawLine(padding, height-padding, width - padding, height-padding, paint);
         canvas.drawLine(padding, height - padding - size, padding, height - padding, paint);
         float x = padding, y = height - padding;
