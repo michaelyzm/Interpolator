@@ -114,6 +114,8 @@ public class InterpolatorPreviewView extends View {
         canvas.drawLine(0, height, width, height,paint);
         canvas.drawLine(padding, height-padding, width - padding, height-padding, paint);
         canvas.drawLine(padding, height - padding - size, padding, height - padding, paint);
+        canvas.drawLine(width-padding, height-padding, width-padding, height-padding-size, paint);
+        canvas.drawLine(padding, height-padding-size, width-padding, height-padding-size, paint);
         RectF P1 = new RectF(interpolator.getX0()*size+padding - 10, height - padding - interpolator.getY0()*size - 10, interpolator.getX0()*size+padding + 10, height - padding - interpolator.getY0()*size + 10);
         RectF P2 = new RectF(interpolator.getX1()*size+padding - 10, height - padding - interpolator.getY1()*size - 10, interpolator.getX1()*size+padding + 10, height - padding - interpolator.getY1()*size + 10);
         canvas.drawRect(P1, paint);
