@@ -36,6 +36,26 @@ public class CubicBezierInterpolator implements Interpolator {
         this.y1 = y1;
     }
 
+    public float getX0()
+    {
+        return x0;
+    }
+
+    public float getY0()
+    {
+        return y0;
+    }
+
+    public float getX1()
+    {
+        return x1;
+    }
+
+    public float getY1()
+    {
+        return y1;
+    }
+
 
     float cubicBezier(float t, float c0, float c1)
     {

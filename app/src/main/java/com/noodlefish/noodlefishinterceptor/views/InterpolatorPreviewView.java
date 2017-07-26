@@ -3,6 +3,8 @@ package com.noodlefish.noodlefishinterceptor.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -21,6 +23,7 @@ public class InterpolatorPreviewView extends View {
     CubicBezierInterpolator interpolator = null;
     private final int padding = 200;
     Paint paint = new Paint();
+    private int currentDragging = 0;
     private OnInterpolatorChangeListener interpolatorChangedListener = null;
 
     public InterpolatorPreviewView(Context context) {
@@ -42,35 +45,55 @@ public class InterpolatorPreviewView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN)
-        {
+        if(event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
             float x = event.getX();
             float y = getHeight() - event.getY();
-            if(x < padding)
-            {
+            if (x < padding) {
                 x = padding;
-            }
-            else if(x > getWidth() - padding)
-            {
+            } else if (x > getWidth() - padding) {
                 x = getWidth() - padding;
             }
-            x = (x - padding) / (getWidth() - 2*padding);
+            x = (x - padding) / (getWidth() - 2 * padding);
             y -= padding;
-            y = y / (getHeight() - 2*padding);
+            if(y < - padding)
+            {
+                y = -padding;
+            }
+            else if(y > getHeight() - padding)
+            {
+                y = getHeight() - padding;
+            }
+            y = y / (getHeight() - 2 * padding);
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                float distance = Math.abs(x - interpolator.getX0()) + Math.abs(y - interpolator.getY0());
+                if (distance < 0.1) {
+                    currentDragging = 1;
+                } else {
+                    distance = Math.abs(x - interpolator.getX1()) + Math.abs(y - interpolator.getY1());
+                    if (distance < 0.1) {
+                        currentDragging = 2;
+                    } else {
+                        currentDragging = 0;
+                    }
+                }
+            }
 
-            if(x <= 0.5)
-            {
-                interpolator.setX0Y0(x, y);
+            if(currentDragging != 0) {
+                if (currentDragging == 1) {
+                    interpolator.setX0Y0(x, y);
+                } else if(currentDragging == 2) {
+                    interpolator.setX1Y1(x, y);
+                }
+                if (interpolatorChangedListener != null) {
+                    interpolatorChangedListener.onInterpolatorChanged(interpolator);
+                }
+                invalidate();
             }
-            else
-            {
-                interpolator.setX1Y1(x, y);
-            }
-            if(interpolatorChangedListener != null)
-            {
-                interpolatorChangedListener.onInterpolatorChanged(interpolator);
-            }
-            invalidate();
+            return true;
+        }
+        else if(event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+            currentDragging = 0;
+            return true;
         }
         return super.onTouchEvent(event);
     }
@@ -91,6 +114,12 @@ public class InterpolatorPreviewView extends View {
         canvas.drawLine(0, height, width, height,paint);
         canvas.drawLine(padding, height-padding, width - padding, height-padding, paint);
         canvas.drawLine(padding, height - padding - size, padding, height - padding, paint);
+        RectF P1 = new RectF(interpolator.getX0()*size+padding - 10, height - padding - interpolator.getY0()*size - 10, interpolator.getX0()*size+padding + 10, height - padding - interpolator.getY0()*size + 10);
+        RectF P2 = new RectF(interpolator.getX1()*size+padding - 10, height - padding - interpolator.getY1()*size - 10, interpolator.getX1()*size+padding + 10, height - padding - interpolator.getY1()*size + 10);
+        canvas.drawRect(P1, paint);
+        canvas.drawRect(P2, paint);
+        canvas.drawLine(padding, height - padding, interpolator.getX0()*size+padding, height - padding - interpolator.getY0()*size, paint);
+        canvas.drawLine(width - padding, height - padding - size, interpolator.getX1()*size+padding, height - padding - interpolator.getY1()*size, paint);
         float x = padding, y = height - padding;
         float prex = x, prey = y;
         for(int i = 0; i <= size; ++i)
